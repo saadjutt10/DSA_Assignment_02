@@ -6,6 +6,7 @@ class Node
 {
 public:
     char val;
+    int calc;
     Node *next;
     Node()
     {
@@ -46,14 +47,66 @@ public:
         cout << "\n";
     }
 
+    void display_int()
+    {
+        Node *temp = new Node;
+        temp = first;
+        if (first == NULL)
+        {
+            cout << "List is empty \n";
+            return;
+        }
+        while (temp != NULL)
+        {
+            cout << temp->calc << "<->";
+            temp = temp->next;
+        }
+        cout << "\n";
+    }
+
     // Insert at end in doubly
-    void insert_end(char valu)
+    void push_end(char valu)
     {
         Node *newp = new Node;
         newp->val = valu;
         // cout<<newp->val <<endl;
         if (first == NULL)
         {
+            first = last = newp;
+        }
+        else
+        {
+            last->next = newp;
+            last = newp;
+        }
+        last->next = NULL;
+    }
+    // Push at start
+    void push_start(char valu)
+    {
+        Node *newp = new Node;
+        newp->val = valu;
+        // cout<<newp->val <<endl;
+        if (first == NULL)
+        {
+            first = last = newp;
+        }
+        else
+        {
+            newp->next = first;
+            first = newp;
+        }
+    }
+
+    // Ovveide Methode
+    void push_endi(int valu)
+    {
+        Node *newp = new Node;
+        newp->calc = valu;
+        // cout<<newp->val <<endl;
+        if (first == NULL)
+        {
+            // cout<<"First ha boss \n";
             first = last = newp;
         }
         else
@@ -82,6 +135,34 @@ public:
         }
         return temp;
     }
+        // TO pop the first node
+    char pop_start()
+    {
+        Node *curr = first;
+        Node *temp = first->next;
+        curr->next=NULL;
+        first=temp;
+        return curr->val;
+    }
+    // Ovveride
+    int pop_int()
+    {
+        Node *curr = first;
+        Node *tem = first;
+        while (curr->next != NULL)
+        {
+            tem = curr;
+            curr = curr->next;
+        }
+        int temp = curr->calc;
+        tem->next = NULL;
+        last=tem;
+        if (curr == first)
+        {
+            first = NULL;
+        }
+        return temp;
+    }
 };
 
 bool single_baraces(string str)
@@ -94,7 +175,7 @@ bool single_baraces(string str)
         if (str.at(i) == '(') // TO add in the list
         {
             cout << "Adding \n";
-            li.insert_end(str.at(i));
+            li.push_end(str.at(i));
         }
         else if (str.at(i) == ')') // TO remove from the list
         {
@@ -129,7 +210,7 @@ bool multiple_baraces(string str)
         if (str.at(i) == '(' || str.at(i) == '{' || str.at(i) == '[') // TO add in the list
         {
             cout << "Adding \n";
-            li.insert_end(str.at(i));
+            li.push_end(str.at(i));
         }
         else
         {
@@ -201,6 +282,7 @@ bool stack_empty()
 {
     return first == NULL;
 }
+
 string priority_check(char str, string output)
 {
     List li;
@@ -219,12 +301,12 @@ string priority_check(char str, string output)
                 cout << temp << endl;
                 output.push_back(temp);
             }
-            li.insert_end(str);
+            li.push_end(str);
         }
         else
         {
             cout << "Stack is empty bro " << str << "\n";
-            li.insert_end(str);
+            li.push_end(str);
         }
     }
     break;
@@ -237,11 +319,11 @@ string priority_check(char str, string output)
                 char temp = li.pop();
                 output.push_back(temp);
             }
-            li.insert_end(str);
+            li.push_end(str);
         }
         else
         {
-            li.insert_end(str);
+            li.push_end(str);
         }
     }
     break;
@@ -254,23 +336,23 @@ string priority_check(char str, string output)
             if (temp1 == '+' || temp1 == '-')
             {
                 cout << "Condition true \n";
-                li.insert_end(temp1);
-                li.insert_end(str);
+                li.push_end(temp1);
+                li.push_end(str);
             }
-            else{
-                li.insert_end(temp1);
-            while (!stack_empty())
+            else
             {
-                char temp = li.pop();
-                output.push_back(temp);
-            }
-            li.insert_end(str);
-
+                li.push_end(temp1);
+                while (!stack_empty())
+                {
+                    char temp = li.pop();
+                    output.push_back(temp);
+                }
+                li.push_end(str);
             }
         }
         else
         {
-            li.insert_end(str);
+            li.push_end(str);
         }
     }
     break;
@@ -283,23 +365,23 @@ string priority_check(char str, string output)
             if (temp1 == '+' || temp1 == '-')
             {
                 cout << "Condition true \n";
-                li.insert_end(temp1);
-                li.insert_end(str);
+                li.push_end(temp1);
+                li.push_end(str);
             }
-            else{
-                li.insert_end(temp1);
-            while (!stack_empty())
+            else
             {
-                char temp = li.pop();
-                output.push_back(temp);
-            }
-            li.insert_end(str);
-
+                li.push_end(temp1);
+                while (!stack_empty())
+                {
+                    char temp = li.pop();
+                    output.push_back(temp);
+                }
+                li.push_end(str);
             }
         }
         else
         {
-            li.insert_end(str);
+            li.push_end(str);
         }
     }
     break;
@@ -337,7 +419,7 @@ string infix_to_postfix(string str)
             {
                 if (paran_count == 1)
                 {
-                    li.insert_end(str.at(i));
+                    li.push_end(str.at(i));
                 }
                 else
                 {
@@ -348,7 +430,7 @@ string infix_to_postfix(string str)
             {
                 if (paran_count == 1)
                 {
-                    li.insert_end(str.at(i));
+                    li.push_end(str.at(i));
                 }
                 else
                 {
@@ -359,7 +441,7 @@ string infix_to_postfix(string str)
             {
                 if (paran_count == 1)
                 {
-                    li.insert_end(str.at(i));
+                    li.push_end(str.at(i));
                 }
                 else
                 {
@@ -384,10 +466,72 @@ string infix_to_postfix(string str)
     return output;
 }
 
+int evaluate_postfix(string val)
+{
+    List li2;
+    int sum = 0;
+    // int len=size(val);
+    for (int i = 0; i < size(val); i++)
+    {
+        if (val.at(i) == '+' || val.at(i) == '-' || val.at(i) == '*' || val.at(i) == '/')
+        {
+
+            cout << val.at(i) << " Spotted \n";
+
+            int temp1 = int(li2.pop_int()); // To convert to int from character since 5 equals '53' or 48+5
+            // cout << temp1 << endl;
+            int temp2 = int(li2.pop_int());
+            // cout << temp2 << endl;
+            // li2.display();
+            switch (val.at(i))
+            {
+            case '+':
+                sum = temp1 + temp2;
+                break;
+            case '-':
+                sum = temp1 - temp2;
+                break;
+            case '*':
+                sum = temp1 * temp2;
+                break;
+            case '/':
+                sum = temp1 / temp2;
+                break;
+
+            default:
+                break;
+            }
+            int temp=sum;
+            // cout << "Sum is :" << temp << endl;
+            li2.push_endi(temp);
+            // li2.display_int();
+            // li2.display();
+        }
+        else
+        {
+            int temp = val.at(i) - '0';
+            // cout << "Pushing " << temp << endl;
+            li2.push_endi(temp);
+            // li2.display_int();
+        }
+    }
+    // li2.display();
+    // if(!stack_empty()){
+    //     cout<<"here";
+    //     sum=li2.pop();
+    //     return sum;
+    // }
+    return sum;
+}
+
+
+
 int main()
 {
-    cout << infix_to_postfix("A*B/C+D*E");
+    // cout << infix_to_postfix("( (A * B) + (C / D) )");
     // cout << multiple_baraces("[{(])}");
+    // cout<< evaluate_postfix("452*+5+");
+    cout << evaluate_postfix("57+67+*");
     //  string str="abcdefgh";
     //  str.erase(1,2);
     //  cout<<str;
