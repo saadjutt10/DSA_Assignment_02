@@ -98,6 +98,26 @@ bool palindrome_check_doubly(string str)
     return true;
 }
 
+bool palindrome_check_singly(string str)
+{
+    int len = size(str);
+    List li;
+    for (int i = 0; i < len; i++)
+    {
+        li.insert_end(str.at(i));
+    }
+    cout << "List created \n";
+
+    for (int i = 0; i<=len-1; i++ )
+    {
+        if  (str.at(i) != li.pop() )
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool palindrome_check_array(string str)
 {
     char arr[size(str)];

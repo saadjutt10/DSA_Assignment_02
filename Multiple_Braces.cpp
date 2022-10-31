@@ -6,39 +6,35 @@ class Node
 {
 public:
     char val;
+    int calc;
     Node *next;
-
     Node()
     {
         val = NULL;
     }
-    Node(char c, Node *next)
+    Node(char c)
     {
-        this->next = next;
         this->val = c;
     }
 };
+Node *first = NULL;
+Node *last = NULL;
 
 class List
 {
 private:
     Node *head = NULL;
-    Node *tail = NULL;
 
 public:
     List()
     {
         head = NULL;
     }
-    Node *getHead()
-    {
-        return head;
-    }
-    void display() ///////////////////HErerererererere
+    void display()
     {
         Node *temp = new Node;
-        temp = head;
-        if (head == NULL)
+        temp = first;
+        if (first == NULL)
         {
             cout << "List is empty \n";
             return;
@@ -50,28 +46,20 @@ public:
         }
         cout << "\n";
     }
-    void display_test()
+
+    void display_int()
     {
         Node *temp = new Node;
-        temp = head;
-        if (head == NULL)
+        temp = first;
+        if (first == NULL)
         {
             cout << "List is empty \n";
             return;
         }
         while (temp != NULL)
         {
-            if (!(temp->val == '+' || temp->val == '-' || temp->val == '*' || temp->val == '/'))
-            {
-                int temporary = temp->val;
-                cout << temporary << "<->";
-                temp = temp->next;
-            }
-            else
-            {
-                cout << temp->val << "<->";
-                temp = temp->next;
-            }
+            cout << temp->calc << "<->";
+            temp = temp->next;
         }
         cout << "\n";
     }
@@ -81,17 +69,17 @@ public:
     {
         Node *newp = new Node;
         newp->val = valu;
-         cout<<"Checking here :"<< (int)newp->val <<endl;
-        if (head == NULL)
+        // cout<<newp->val <<endl;
+        if (first == NULL)
         {
-            head = tail = newp;
+            first = last = newp;
         }
         else
         {
-            tail->next = newp;
-            tail = newp;
+            last->next = newp;
+            last = newp;
         }
-        tail->next = NULL;
+        last->next = NULL;
     }
     // Push at start
     void push_start(char valu)
@@ -99,22 +87,41 @@ public:
         Node *newp = new Node;
         newp->val = valu;
         // cout<<newp->val <<endl;
-        if (head == NULL)
+        if (first == NULL)
         {
-            head = tail = newp;
+            first = last = newp;
         }
         else
         {
-            newp->next = head;
-            head = newp;
+            newp->next = first;
+            first = newp;
         }
+    }
+
+    // Ovveide Methode
+    void push_endi(int valu)
+    {
+        Node *newp = new Node;
+        newp->calc = valu;
+        // cout<<newp->val <<endl;
+        if (first == NULL)
+        {
+            // cout<<"First ha boss \n";
+            first = last = newp;
+        }
+        else
+        {
+            last->next = newp;
+            last = newp;
+        }
+        last->next = NULL;
     }
 
     // TO pop the last node
     char pop()
     {
-        Node *curr = head;
-        Node *tem = head;
+        Node *curr = first;
+        Node *tem = first;
         while (curr->next != NULL)
         {
             tem = curr;
@@ -122,24 +129,42 @@ public:
         }
         char temp = curr->val;
         tem->next = NULL;
-        tail = tem;
-        if (curr == head)
+        if (curr == first)
         {
-            head = NULL;
+            first = NULL;
         }
         return temp;
     }
-    // TO pop the first node
+        // TO pop the first node
     char pop_start()
     {
-        Node *curr = head;
-        Node *temp = head->next;
-        curr->next = NULL;
-        head = temp;
+        Node *curr = first;
+        Node *temp = first->next;
+        curr->next=NULL;
+        first=temp;
         return curr->val;
     }
+    // Ovveride
+    int pop_int()
+    {
+        Node *curr = first;
+        Node *tem = first;
+        while (curr->next != NULL)
+        {
+            tem = curr;
+            curr = curr->next;
+        }
+        int temp = curr->calc;
+        tem->next = NULL;
+        last=tem;
+        if (curr == first)
+        {
+            first = NULL;
+        }
+        return temp;
+    }
 };
-/*
+
 bool single_baraces(string str)
 {
     int len = size(str);
@@ -173,8 +198,8 @@ bool single_baraces(string str)
         return true;
     }
     return false;
-} */
-/*
+}
+
 bool multiple_baraces(string str)
 {
     int len = size(str);
@@ -255,7 +280,7 @@ bool multiple_baraces(string str)
 
 bool stack_empty()
 {
-    return head == NULL;
+    return first == NULL;
 }
 
 string priority_check(char str, string output)
@@ -440,75 +465,14 @@ string infix_to_postfix(string str)
     }
     return output;
 }
- */
 
-int evaluate_postfix(Node *head)
-{
-    List li2;
-    int sum = 0;
-    // int len=size(val);
-    Node *azy = head;
-    while (azy != NULL)
-    {
-        if (azy->val == '+' || azy->val == '-' || azy->val == '*' || azy->val == '/')
-        {
 
-            cout << azy->val << " Spotted \n";
 
-            int temp1 = li2.pop();
-            int temp2 = li2.pop();
-            li2.display_test();
-            switch (azy->val)
-            {
-            case '+':
-                sum = temp1 + temp2;
-                break;
-            case '-':
-                sum = temp1 - temp2;
-                break;
-            case '*':
-                sum = temp1 * temp2;
-                break;
-            case '/':
-                sum = temp1 / temp2;
-                break;
-
-            default:
-                break;
-            }
-            char temp_sum=sum ;
-            cout<<"Pushing the result "<< sum << endl;
-            li2.push_end(sum);
-            li2.display_test();
-        }
-        else
-        {
-            cout << "Pushing " << ((int)azy->val ) << endl;
-            li2.push_end(azy->val); // Pushing char equavalent of int
-            li2.display_test();
-        }
-        azy = azy->next;
-    }
-    return sum;
-}
 
 int main()
 {
-    // cout << infix_to_postfix("12*24+5*10");
+    // cout << infix_to_postfix("( (A * B) + (C / D) )");
     // cout << multiple_baraces("[{(])}");
-    string arr[] = {"12", "24", "*", "510", "*", "+"};
-    List li;
-    li.push_end(288);
-    li.push_end(24);
-    li.push_end('*');
-    li.push_end(5);
-    li.push_end(10);
-    li.push_end('*');
-    li.push_end('+');
-    li.display_test();
-    cout << evaluate_postfix(li.getHead());
-    // cout << evaluate_postfix("1224");
-
     //  string str="abcdefgh";
     //  str.erase(1,2);
     //  cout<<str;
